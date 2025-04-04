@@ -5,6 +5,7 @@ from ttkthemes import ThemedTk
 from ReadWriteMemory import ReadWriteMemory
 
 GAME_OFFSET = 0x193e370
+GAMEPLAY_BYTE_OFFSET = 0x2848c
 HEALTH_OFFSET = 0x284a8
 SCORE_OFFSET = 0x284aa
 STR_OFFSET = 0x2849e
@@ -105,6 +106,8 @@ class Application(ThemedTk):
 
 		# Because Demon Stalkers always loads in the same spot in memory relative to DOSBox on a clean boot, it too has an offset
 		# We calculate all memory pointers from these static offsets after finding DOSBox
+
+		self.gameplayPointer = self.process.get_pointer(base_address+GAME_OFFSET, offsets=[GAMEPLAY_BYTE_OFFSET])
 		healthPointer = self.process.get_pointer(base_address+GAME_OFFSET, offsets=[HEALTH_OFFSET])
 		scorePointer = self.process.get_pointer(base_address+GAME_OFFSET, offsets=[SCORE_OFFSET])
 		magicPointer = self.process.get_pointer(base_address+GAME_OFFSET, offsets=[MAG_OFFSET])
@@ -166,9 +169,10 @@ class Application(ThemedTk):
 
 
 	def updateLabel(self):
-		if len(self.dataVariables) == len(self.dataPointers):
-			for i in range(len(self.dataPointers)):
-				self.dataVariables[i].set(readValue(self.process, self.dataPointers[i], 1))
+		if readValue(self.process, self.gameplayPointer, 1) == 1: 
+			if len(self.dataVariables) == len(self.dataPointers):
+				for i in range(len(self.dataPointers)):
+					self.dataVariables[i].set(readValue(self.process, self.dataPointers[i], 1))
 		self.after(250, self.updateLabel)
 
 if __name__ == "__main__":
