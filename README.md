@@ -7,11 +7,6 @@ ReadWriteMemory Class written by Victor Santiago (vsantiago113).
 
 ---
 
-### Requirements
-Python 3.4+<br />
-OS: Windows 7, 8 and 10<br />
----
-
 ## Usage
 
 Run while DOSBox is open and running Demon Stalkers. Offer only valid if all
